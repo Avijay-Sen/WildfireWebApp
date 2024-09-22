@@ -14,8 +14,6 @@ import json
 from config import COUNTRY_CODES, WEATHER_API_KEY
 from rag import generate_answer
 
-#IMAGE_ADDRESS = "https://github.com/Avijay-Sen/WildfireWebApp/blob/main/SmokeyAppIcon.png" 
-#"https://blog.nhstateparks.org/wp-content/uploads/2023/09/canada-wildfire-rt-lv-230605_1686011446619_hpMain_16x9_1600.jpeg"
 CONTEXT_TEMPLATE = """
 Weather condition of the city {city} is {weather_condition}.
 Tempertaure is {temp}. Temperature feels link {temp_feel}. Minimum temperature is {temp_min} while maximum temperature is {temp_max}. All the temperatures are in Kelvin.
@@ -25,8 +23,6 @@ Visibility in meters {visibility}.
 Wind speed is {wind_speed} in meter/sec and direction is {wind_deg} in degrees.
 Based on this weather data, is there a wildfire risk in this area?
 """
-#Atmospheric pressure on the sea level {sea_level} hPa.
-#Atmospheric pressure on the ground level {ground_level} hPa.
 
 # Convert temperature from Kelvin to Fahrenheit
 def kelvin_to_fahrenheit(kelvin):
@@ -35,8 +31,6 @@ def kelvin_to_fahrenheit(kelvin):
 def create_url(country_code: str, state: str, city: str) -> str:
     return f'http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country_code}&APPID={WEATHER_API_KEY}'
 
-#def create_url(country_code: str, city: str) -> str:
-    #return f'http://api.openweathermap.org/data/2.5/weather?q={city}, {country_code} usa&APPID={WEATHER_API_KEY}'
 
 def get_weather_data(url: str):
     r = requests.get(url)
@@ -115,27 +109,6 @@ Enter your location details to check the current weather conditions and assess t
 Stay informed and stay safe!
 """)
 
-# Initialize dict_weather_data as None
-dict_weather_data = None
-
-# Default values for fetching weather data
-default_country = 'US'  # Change this to your desired country code
-default_state = 'CA'     # Change this to your desired state
-default_city = 'Los Angeles'  # Change this to your desired city
-weather_url = create_url(COUNTRY_CODES[default_country], default_state, default_city)
-dict_weather_data = get_weather_data(weather_url)
-
-# Sidebar for displaying key weather results
-st.sidebar.header("Weather Overview")
-
-if dict_weather_data:
-    st.sidebar.write(f"Condition: **{dict_weather_data['weather_condition']}**")
-    st.sidebar.write(f"Temperature: **{dict_weather_data['temp_f']:.2f}°F**")
-    st.sidebar.write(f"Min: **{dict_weather_data['temp_min_f']:.2f}°F**, Max: **{dict_weather_data['temp_max_f']:.2f}°F**")
-else:
-    st.sidebar.write("No weather data available.")
-
-
 st.markdown(
     """
     <style>
@@ -154,17 +127,6 @@ st.markdown(
 IMAGE_ADDRESS = "https://raw.githubusercontent.com/Avijay-Sen/WildfireWebApp/main/SmokeyAppIcon.png"
 st.image(IMAGE_ADDRESS, use_column_width=True)
 
-# user needs to select type a city and select a country
-#st.subheader("What is the country you are living in?")
-
-# get the country
-#country = st.selectbox(
-#    "Select Your Country",
-#    list(COUNTRY_CODES.keys()),
-#    index = None
-
-#)
-
 # User needs to select a country, state, and city
 st.subheader("Enter your location")
 
@@ -182,6 +144,23 @@ if country and state and city_name:
     else:
         dict_weather_data["city"] = city_name
         dict_weather_data["state"] = state
+
+
+# Assuming you have already called get_weather_data and stored the result
+dict_weather_data = get_weather_data(weather_url)
+
+if dict_weather_data:
+    # Display data in the sidebar
+    st.sidebar.header("Weather Overview")
+    st.sidebar.write(f"Condition: **{dict_weather_data['weather_condition']}**")
+    st.sidebar.write(f"Temperature: **{dict_weather_data['temp']:.2f}°F**")
+    st.sidebar.write(f"Feels Like: **{dict_weather_data['temp_feel']:.2f}°F**")
+    st.sidebar.write(f"Min: **{dict_weather_data['temp_min']:.2f}°F**")
+    st.sidebar.write(f"Max: **{dict_weather_data['temp_max']:.2f}°F**")
+    st.sidebar.write(f"Humidity: **{dict_weather_data['humidity']}%**")
+    st.sidebar.write(f"Pressure: **{dict_weather_data['pressure']} hPa**")
+    st.sidebar.write(f"Visibility: **{dict_weather_data['visibility']} meters**")
+    st.sidebar.write(f"Wind Speed: **{dict_weather_data['wind_speed']} m/s**")
 
 #if country:
     # set the text input
