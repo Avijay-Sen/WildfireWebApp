@@ -115,6 +115,30 @@ Enter your location details to check the current weather conditions and assess t
 Stay informed and stay safe!
 """)
 
+# Sidebar for displaying key weather results
+st.sidebar.header("Weather Overview")
+
+if dict_weather_data:
+    st.sidebar.write(f"Condition: **{dict_weather_data['weather_condition']}**")
+    st.sidebar.write(f"Temperature: **{dict_weather_data['temp_f']:.2f}°F**")
+    st.sidebar.write(f"Min: **{dict_weather_data['temp_min_f']:.2f}°F**, Max: **{dict_weather_data['temp_max_f']:.2f}°F**")
+else:
+    st.sidebar.write("No weather data available. Please check your inputs.")
+
+st.markdown(
+    """
+    <style>
+        .reportview-container {
+            background: #ff6f47;
+        }
+        .sidebar .sidebar-content {
+            background: #c28961;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # Set the image (correct URL)
 IMAGE_ADDRESS = "https://raw.githubusercontent.com/Avijay-Sen/WildfireWebApp/main/SmokeyAppIcon.png"
 st.image(IMAGE_ADDRESS, use_column_width=True)
