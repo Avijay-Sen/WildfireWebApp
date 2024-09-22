@@ -14,7 +14,8 @@ import json
 from config import COUNTRY_CODES, WEATHER_API_KEY
 from rag import generate_answer
 
-IMAGE_ADDRESS = "https://blog.nhstateparks.org/wp-content/uploads/2023/09/canada-wildfire-rt-lv-230605_1686011446619_hpMain_16x9_1600.jpeg"
+IMAGE_ADDRESS = "https://files.oaiusercontent.com/file-r4bPHwB8BenqKxU0w5oyukSS?se=2024-09-22T15%3A55%3A28Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D8f41c9bc-2b98-43cf-b1ea-de0ef63ac540.webp&sig=xqEiDEkTcRekKheaFsSOSH98ERojjS9CcaN8OpYNAUY%3D" 
+#"https://blog.nhstateparks.org/wp-content/uploads/2023/09/canada-wildfire-rt-lv-230605_1686011446619_hpMain_16x9_1600.jpeg"
 CONTEXT_TEMPLATE = """
 Weather condition of the city {city} is {weather_condition}.
 Tempertaure is {temp}. Temperature feels link {temp_feel}. Minimum temperature is {temp_min} while maximum temperature is {temp_max}. All the temperatures are in Kelvin.
@@ -27,8 +28,15 @@ Wind speed is {wind_speed} in meter/sec and direction is {wind_deg} in degrees.
 Based on this weather data, is there a wildfire risk in this area?
 """
 
-def create_url(country_code: str, city: str) -> str:
-    return f'http://api.openweathermap.org/data/2.5/weather?q={city}, {country_code} usa&APPID={WEATHER_API_KEY}'
+# Convert temperature from Kelvin to Fahrenheit
+def kelvin_to_fahrenheit(kelvin):
+    return (kelvin - 273.15) * 9/5 + 32
+
+def create_url(country_code: str, state: str, city: str) -> str:
+    return f'http://api.openweathermap.org/data/2.5/weather?q={city},{state},{country_code}&APPID={WEATHER_API_KEY}'
+
+#def create_url(country_code: str, city: str) -> str:
+    #return f'http://api.openweathermap.org/data/2.5/weather?q={city}, {country_code} usa&APPID={WEATHER_API_KEY}'
 
 def get_weather_data(url: str):
     r = requests.get(url)
@@ -65,7 +73,7 @@ def get_weather_data(url: str):
     return main_data, wind_data, cloud_data, weather_data, weather_dict
 
 # set a title
-st.title("Wild Fire Prediction")
+st.title("Smokey-Wildfire Predictor")
 
 # set the image
 st.image(IMAGE_ADDRESS, caption = "Wildfire")
@@ -81,27 +89,45 @@ country = st.selectbox(
 
 )
 
-if country:
-    # set the text input
-    city_name = st.text_input("City Name", value = None)
-    if city_name:
-        weather_url = create_url(COUNTRY_CODES[country], city_name)
-        # get weather data
-        main_data, wind_data, cloud_data, weather_data, dict_weather_data = get_weather_data(weather_url)
-        if not dict_weather_data:
-            st.error("Check the City Name: Cannot fetch weather data", icon = "🛑")
-            st.stop()
-        st.write(dict_weather_data)
+# User needs to select a country, state, and city
+st.subheader("Enter your location")
+
+country = st.selectbox("Select your Country", list(COUNTRY_CODES.keys()), index=0)
+
+state = st.text_input("State", value="")
+city_name = st.text_input("City Name", value="")
+
+if country and state and city_name:
+    weather_url = create_url(COUNTRY_CODES[country], state, city_name)
+    dict_weather_data = get_weather_data(weather_url)
+
+    if not dict_weather_data:
+        st.error("Could not fetch weather data. Please check the city and state names.", icon="🛑")
+    else:
         dict_weather_data["city"] = city_name
-        with st.sidebar:
-            if weather_data:
-                st.subheader("Weather Condition")
-                st.write(weather_data[0])
-            st.subheader("Temperature Statistics")
-            st.write(main_data)
-            st.subheader("Wind and Cloud Data")
-            st.write(wind_data)
-            st.write(cloud_data)
+        dict_weather_data["state"] = state
+
+#if country:
+    # set the text input
+    #city_name = st.text_input("City Name", value = None)
+    #if city_name:
+        #weather_url = create_url(COUNTRY_CODES[country], city_name)
+        # get weather data
+        #main_data, wind_data, cloud_data, weather_data, dict_weather_data = get_weather_data(weather_url)
+        #if not dict_weather_data:
+           # st.error("Check the City Name: Cannot fetch weather data", icon = "🛑")
+           # st.stop()
+       # st.write(dict_weather_data)
+       # dict_weather_data["city"] = city_name
+       # with st.sidebar:
+           # if weather_data:
+               # st.subheader("Weather Condition")
+               # st.write(weather_data[0])
+           # st.subheader("Temperature Statistics")
+           # st.write(main_data)
+           # st.subheader("Wind and Cloud Data")
+          #  st.write(wind_data)
+          #  st.write(cloud_data)
             # create the query
         query = CONTEXT_TEMPLATE.format(**dict_weather_data)
         # get the answer
