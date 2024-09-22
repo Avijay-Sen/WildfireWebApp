@@ -146,22 +146,6 @@ if country and state and city_name:
         dict_weather_data["state"] = state
 
 
-# Assuming you have already called get_weather_data and stored the result
-dict_weather_data = get_weather_data(weather_url)
-
-if dict_weather_data:
-    # Display data in the sidebar
-    st.sidebar.header("Weather Overview")
-    st.sidebar.write(f"Condition: **{dict_weather_data['weather_condition']}**")
-    st.sidebar.write(f"Temperature: **{dict_weather_data['temp']:.2f}°F**")
-    st.sidebar.write(f"Feels Like: **{dict_weather_data['temp_feel']:.2f}°F**")
-    st.sidebar.write(f"Min: **{dict_weather_data['temp_min']:.2f}°F**")
-    st.sidebar.write(f"Max: **{dict_weather_data['temp_max']:.2f}°F**")
-    st.sidebar.write(f"Humidity: **{dict_weather_data['humidity']}%**")
-    st.sidebar.write(f"Pressure: **{dict_weather_data['pressure']} hPa**")
-    st.sidebar.write(f"Visibility: **{dict_weather_data['visibility']} meters**")
-    st.sidebar.write(f"Wind Speed: **{dict_weather_data['wind_speed']} m/s**")
-
 #if country:
     # set the text input
     #city_name = st.text_input("City Name", value = None)
