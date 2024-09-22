@@ -14,19 +14,19 @@ import json
 from config import COUNTRY_CODES, WEATHER_API_KEY
 from rag import generate_answer
 
-IMAGE_ADDRESS = "https://github.com/Avijay-Sen/WildfireWebApp/blob/main/SmokeyAppIcon.png" 
+#IMAGE_ADDRESS = "https://github.com/Avijay-Sen/WildfireWebApp/blob/main/SmokeyAppIcon.png" 
 #"https://blog.nhstateparks.org/wp-content/uploads/2023/09/canada-wildfire-rt-lv-230605_1686011446619_hpMain_16x9_1600.jpeg"
 CONTEXT_TEMPLATE = """
 Weather condition of the city {city} is {weather_condition}.
 Tempertaure is {temp}. Temperature feels link {temp_feel}. Minimum temperature is {temp_min} while maximum temperature is {temp_max}. All the temperatures are in Kelvin.
 Humidity is {humidity}%.
 Pressure is {pressure} hPa.
-Atmospheric pressure on the sea level {sea_level} hPa.
-Atmospheric pressure on the ground level {ground_level} hPa.
 Visibility in meters {visibility}.
 Wind speed is {wind_speed} in meter/sec and direction is {wind_deg} in degrees.
 Based on this weather data, is there a wildfire risk in this area?
 """
+#Atmospheric pressure on the sea level {sea_level} hPa.
+#Atmospheric pressure on the ground level {ground_level} hPa.
 
 # Convert temperature from Kelvin to Fahrenheit
 def kelvin_to_fahrenheit(kelvin):
@@ -115,7 +115,8 @@ Enter your location details to check the current weather conditions and assess t
 Stay informed and stay safe!
 """)
 
-# set the image
+# Set the image (correct URL)
+IMAGE_ADDRESS = "https://raw.githubusercontent.com/Avijay-Sen/WildfireWebApp/main/SmokeyAppIcon.png"
 st.image(IMAGE_ADDRESS, use_column_width=True)
 
 # user needs to select type a city and select a country
