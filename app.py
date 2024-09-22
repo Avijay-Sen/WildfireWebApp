@@ -14,7 +14,7 @@ import json
 from config import COUNTRY_CODES, WEATHER_API_KEY
 from rag import generate_answer
 
-IMAGE_ADDRESS = "https://files.oaiusercontent.com/file-r4bPHwB8BenqKxU0w5oyukSS?se=2024-09-22T15%3A55%3A28Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D8f41c9bc-2b98-43cf-b1ea-de0ef63ac540.webp&sig=xqEiDEkTcRekKheaFsSOSH98ERojjS9CcaN8OpYNAUY%3D" 
+IMAGE_ADDRESS = "https://github.com/Avijay-Sen/WildfireWebApp/blob/main/SmokeyAppIcon.png" 
 #"https://blog.nhstateparks.org/wp-content/uploads/2023/09/canada-wildfire-rt-lv-230605_1686011446619_hpMain_16x9_1600.jpeg"
 CONTEXT_TEMPLATE = """
 Weather condition of the city {city} is {weather_condition}.
@@ -116,7 +116,7 @@ Stay informed and stay safe!
 """)
 
 # set the image
-st.image(IMAGE_ADDRESS, caption = "Wildfire")
+st.image(IMAGE_ADDRESS, use_column_width=True)
 
 # user needs to select type a city and select a country
 #st.subheader("What is the country you are living in?")
