@@ -115,6 +115,16 @@ Enter your location details to check the current weather conditions and assess t
 Stay informed and stay safe!
 """)
 
+# Initialize dict_weather_data as None
+dict_weather_data = None
+
+# Default values for fetching weather data
+default_country = 'US'  # Change this to your desired country code
+default_state = 'CA'     # Change this to your desired state
+default_city = 'Los Angeles'  # Change this to your desired city
+weather_url = create_url(COUNTRY_CODES[default_country], default_state, default_city)
+dict_weather_data = get_weather_data(weather_url)
+
 # Sidebar for displaying key weather results
 st.sidebar.header("Weather Overview")
 
@@ -123,7 +133,8 @@ if dict_weather_data:
     st.sidebar.write(f"Temperature: **{dict_weather_data['temp_f']:.2f}°F**")
     st.sidebar.write(f"Min: **{dict_weather_data['temp_min_f']:.2f}°F**, Max: **{dict_weather_data['temp_max_f']:.2f}°F**")
 else:
-    st.sidebar.write("No weather data available. Please check your inputs.")
+    st.sidebar.write("No weather data available.")
+
 
 st.markdown(
     """
